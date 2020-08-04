@@ -29,6 +29,7 @@
         </e>
         <e p="Player&amp;Camera" t="Include">
           <e p="Scripts" t="Include">
+            <e p="CameraCollision_1.cs" t="Include" />
             <e p="CameraCont.cs" t="Include" />
             <e p="PlatformSpline.cs" t="Include" />
             <e p="PlayerController.cs" t="Include" />

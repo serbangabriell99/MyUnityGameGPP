@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
 {
     public static bool attack = false;
     public static int coinsCollected = 0;
+    public static int diamondsCollected = 0;
     private float jumpTime = 0.54f;
     private float time1;
     public GameObject pickupEffect;
@@ -48,6 +49,12 @@ public class PlayerController : MonoBehaviour
     private CharacterController controller;
 
     private Transform cameraT;
+
+    public Transform teleportTarget1;
+    public Transform teleportTarget2;
+
+    private bool teleport1 = false;
+    private bool teleport2 = false;
     void Start()
     {
         magnetTutorial.SetActive(false);
@@ -130,13 +137,23 @@ public class PlayerController : MonoBehaviour
           Invoke("Restart", 1.5f);  
         }
 
-        if (coinsCollected == 1)
+        if (coinsCollected == 2)
         {
             level1win = true;
         }
         else
         {
             level1win = false;
+        }
+
+        if (teleport1)
+        {
+            transform.position = teleportTarget1.transform.position;
+        }
+
+        if (teleport2)
+        {
+            transform.position = teleportTarget2.transform.position;
         }
     }
 
@@ -273,6 +290,12 @@ public class PlayerController : MonoBehaviour
         if (other.tag == "Coin")
         {
             Destroy(other.gameObject);
+            diamondsCollected++;
+        }
+        
+        if (other.tag == "Diamond")
+        {
+            Destroy(other.gameObject);
             coinsCollected++;
         }
         
@@ -282,16 +305,22 @@ public class PlayerController : MonoBehaviour
             gameOver = true;
         }
         
-        if (other.tag == "SceneTrigger")
+        if (other.CompareTag("SceneTrigger"))
         {
-            if (SceneManager.GetActiveScene().name == "Scene1")
-            {
-                SceneManager.LoadScene("Scene2");
-            }
-            else if(SceneManager.GetActiveScene().name == "Scene2")
-            {
-                SceneManager.LoadScene("Scene1"); 
-            }
+            teleport1 = true;
+        }
+        else
+        {
+            teleport1 = false;
+        }
+
+        if (other.tag == "SceneTrigger2")
+        {
+            teleport2 = true;
+        }
+        else
+        {
+            teleport2 = false;
         }
     }
 
