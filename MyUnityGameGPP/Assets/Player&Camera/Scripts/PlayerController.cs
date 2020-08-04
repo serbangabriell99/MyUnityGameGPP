@@ -2,17 +2,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
     public static bool attack = false;
-    public static bool isMagnet;
+    public static int coinsCollected = 0;
     private float jumpTime = 0.54f;
     private float time1;
     public GameObject pickupEffect;
     public GameObject jumpParticle;
     public GameObject pickupEffectSpeed;
+    public GameObject pickupEffectMagnet;
     public GameObject RunParticle;
+    public bool gameOver = false;
+    public GameObject youLose;
 
     public float walkSpeed = 4;
     public float runSpeed = 8;
@@ -32,18 +37,22 @@ public class PlayerController : MonoBehaviour
     private bool can_doubleJump = false;
     private bool doubleJumpCollected = false;
     private bool superSpeedCollected = false;
+    public static bool MagnetCollected = false;
     
     Animator anim;
     private CharacterController controller;
 
     private Transform cameraT;
-
     void Start()
     {
+        youLose.SetActive(false);
         anim = GetComponent<Animator>();
         cameraT = Camera.main.transform;
         controller = GetComponent<CharacterController>();
-        isMagnet = false;
+        doubleJumpCollected = false;
+        superSpeedCollected = false;
+        MagnetCollected = false;
+        coinsCollected = 0;
     }
     
     void Update()
@@ -101,6 +110,12 @@ public class PlayerController : MonoBehaviour
         else
         {
             anim.SetBool("inAir", false);
+        }
+
+        if (gameOver)
+        { 
+            youLose.SetActive(true);
+          Invoke("Restart", 1.5f);  
         }
     }
 
@@ -191,6 +206,12 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(30);
         superSpeedCollected = false;
     }
+    
+    IEnumerator MagnetTime()
+    {
+        yield return new WaitForSeconds(30);
+        MagnetCollected = false;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -209,11 +230,32 @@ public class PlayerController : MonoBehaviour
             superSpeedCollected = true;
             StartCoroutine(SuperSpeedTime());
         }
+        
+        if (other.tag == "Magnet")
+        {
+            Instantiate(pickupEffectMagnet, transform.position, transform.rotation);
+            Destroy(other.gameObject);
+            MagnetCollected = true;
+            StartCoroutine(MagnetTime());
+        }
 
         if (other.tag == "Coin")
         {
             Destroy(other.gameObject);
+            coinsCollected++;
         }
+        
+        if (other.tag == "SilverCoin")
+        {
+            Destroy(other.gameObject);
+            gameOver = true;
+        }
+    }
+
+    void Restart()
+    {
+       // coinsCollected = 0;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name); 
     }
 }
 
