@@ -18,6 +18,9 @@ public class PlayerController : MonoBehaviour
     public GameObject RunParticle;
     public bool gameOver = false;
     public GameObject youLose;
+    public GameObject timer;
+    public GameObject tutorialText;
+    public GameObject magnetTutorial;
 
     public float walkSpeed = 4;
     public float runSpeed = 8;
@@ -37,14 +40,19 @@ public class PlayerController : MonoBehaviour
     private bool can_doubleJump = false;
     private bool doubleJumpCollected = false;
     private bool superSpeedCollected = false;
-    public static bool MagnetCollected = false;
-    
+    public bool MagnetCollected = false;
+
+    public static bool level1win = false;
+
     Animator anim;
     private CharacterController controller;
 
     private Transform cameraT;
     void Start()
     {
+        magnetTutorial.SetActive(false);
+        tutorialText.SetActive(true);
+        timer.SetActive(false);
         youLose.SetActive(false);
         anim = GetComponent<Animator>();
         cameraT = Camera.main.transform;
@@ -57,6 +65,10 @@ public class PlayerController : MonoBehaviour
     
     void Update()
     {
+        if (coinsCollected > 0 || gameOver)
+        {
+            tutorialText.SetActive(false);
+        }
 
         if (superSpeedCollected)
         {
@@ -116,6 +128,15 @@ public class PlayerController : MonoBehaviour
         { 
             youLose.SetActive(true);
           Invoke("Restart", 1.5f);  
+        }
+
+        if (coinsCollected == 1)
+        {
+            level1win = true;
+        }
+        else
+        {
+            level1win = false;
         }
     }
 
@@ -211,6 +232,13 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(30);
         MagnetCollected = false;
+        timer.SetActive(false);
+    }
+    
+    IEnumerator MagnetTimeTutorial()
+    {
+        yield return new WaitForSeconds(5);
+        magnetTutorial.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -236,6 +264,9 @@ public class PlayerController : MonoBehaviour
             Instantiate(pickupEffectMagnet, transform.position, transform.rotation);
             Destroy(other.gameObject);
             MagnetCollected = true;
+            timer.SetActive(true);
+            magnetTutorial.SetActive(true);
+            StartCoroutine(MagnetTimeTutorial());
             StartCoroutine(MagnetTime());
         }
 
@@ -245,16 +276,28 @@ public class PlayerController : MonoBehaviour
             coinsCollected++;
         }
         
-        if (other.tag == "SilverCoin")
+        if (other.tag == "SilverCoin" && !MagnetCollected)
         {
             Destroy(other.gameObject);
             gameOver = true;
+        }
+        
+        if (other.tag == "SceneTrigger")
+        {
+            if (SceneManager.GetActiveScene().name == "Scene1")
+            {
+                SceneManager.LoadScene("Scene2");
+            }
+            else if(SceneManager.GetActiveScene().name == "Scene2")
+            {
+                SceneManager.LoadScene("Scene1"); 
+            }
         }
     }
 
     void Restart()
     {
-       // coinsCollected = 0;
+        coinsCollected = 0;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name); 
     }
 }

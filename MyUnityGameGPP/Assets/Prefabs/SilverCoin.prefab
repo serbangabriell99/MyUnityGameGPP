@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9044911368769753961}
   - component: {fileID: 3731306063469946370}
   - component: {fileID: 3095504556217697337}
-  - component: {fileID: -8089515896945250558}
+  - component: {fileID: -5418221571157904334}
   m_Layer: 0
   m_Name: SilverCoin
   m_TagString: SilverCoin
@@ -60,7 +60,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotateSpeed: 4
---- !u!114 &-8089515896945250558
+--- !u!114 &-5418221571157904334
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

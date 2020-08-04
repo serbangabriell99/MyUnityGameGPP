@@ -123,7 +123,10 @@
           </e>
         </e>
         <e p="Scripts" t="Include">
+          <e p="CountdownTimer.cs" t="Include" />
           <e p="MagnetTrigger.cs" t="Include" />
+          <e p="OpenDoorRight.cs" t="Include" />
+          <e p="PowerUpCollect.cs" t="Include" />
           <e p="RotateCoin.cs" t="Include" />
           <e p="Score.cs" t="Include" />
         </e>

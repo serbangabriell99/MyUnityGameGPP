@@ -13,6 +13,7 @@ TagManager:
   - SplineStation
   - SilverCoin
   - Magnet
+  - SceneTrigger
   layers:
   - Default
   - TransparentFX
