@@ -27,6 +27,10 @@ public class PlayerController : MonoBehaviour
     public GameObject coinsCollectedText;
     public GameObject diamondsCollectedText;
     public GameObject tutorialTextLevel2;
+    public GameObject tutorialTextLevel3;
+    public GameObject timerJump;
+    
+    public GameObject winText;
 
     public float walkSpeed = 4;
     public float runSpeed = 8;
@@ -57,30 +61,44 @@ public class PlayerController : MonoBehaviour
 
     public Transform teleportTarget1;
     public Transform teleportTarget2;
+    public Transform teleportTarget3;
+    public Transform teleportTarget4;
 
     private bool teleport1 = false;
     private bool teleport2 = false;
+    private bool teleport3 = false;
+    private bool teleport4 = false;
+
+    public static bool dead = false;
+    
     void Start()
     {
-        magnetTutorial.SetActive(false);
-        tutorialText.SetActive(true);
-        timer.SetActive(false);
-        timerSpeed.SetActive(false);
-        youLose.SetActive(false);
-        anim = GetComponent<Animator>();
-        cameraT = Camera.main.transform;
-        controller = GetComponent<CharacterController>();
-        doubleJumpCollected = false;
-        superSpeedCollected = false;
-        MagnetCollected = false;
-        coinsCollected = 0;
         
-        diamondsCollectedText.SetActive(false);
-        tutorialTextLevel2.SetActive(false);
+                magnetTutorial.SetActive(false);
+                  tutorialText.SetActive(true);
+                  timerJump.SetActive(false);
+                  timer.SetActive(false);
+                  timerSpeed.SetActive(false);
+                  youLose.SetActive(false);
+                  anim = GetComponent<Animator>();
+                  cameraT = Camera.main.transform;
+                  controller = GetComponent<CharacterController>();
+                  doubleJumpCollected = false;
+                  superSpeedCollected = false;
+                  MagnetCollected = false;
+                  coinsCollected = 0;
+                  diamondsCollected = 0;
+                  dead = false;
+          
+                  diamondsCollectedText.SetActive(false);
+                  tutorialTextLevel2.SetActive(false);
+                  tutorialTextLevel3.SetActive(false);
+                  winText.SetActive(false);
+
     }
     
     void Update()
-    {
+    { 
         if (coinsCollected > 0 || gameOver)
         {
             tutorialText.SetActive(false);
@@ -89,8 +107,8 @@ public class PlayerController : MonoBehaviour
         if (superSpeedCollected)
         {
             Instantiate(RunParticle, transform.position, transform.rotation);
-            walkSpeed = 18;
-            runSpeed = 25;
+            walkSpeed = 14;
+            runSpeed = 18;
         }
         else
         {
@@ -146,7 +164,12 @@ public class PlayerController : MonoBehaviour
           Invoke("Restart", 1.5f);  
         }
 
-        if (coinsCollected == 2)
+        if (dead)
+        {
+            Invoke("Restart", 1f);  
+        }
+
+        if (coinsCollected == 18)
         {
             level1win = true;
             coinsCollectedText.SetActive(false);
@@ -154,6 +177,11 @@ public class PlayerController : MonoBehaviour
         else
         {
             level1win = false;
+        }
+
+        if (diamondsCollected == 4)
+        {
+            diamondsCollectedText.SetActive(false);
         }
 
         if (teleport1)
@@ -164,6 +192,16 @@ public class PlayerController : MonoBehaviour
         if (teleport2)
         {
             transform.position = teleportTarget2.transform.position;
+        }
+        
+        if (teleport3)
+        {
+            transform.position = teleportTarget3.transform.position;
+        }
+        
+        if (teleport4)
+        {
+            transform.position = teleportTarget4.transform.position;
         }
     }
 
@@ -247,6 +285,7 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(30);
         doubleJumpCollected = false;
+        timerJump.SetActive(false);
     }
 
     IEnumerator SuperSpeedTime()
@@ -274,6 +313,12 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(5);
         tutorialTextLevel2.SetActive(false);
     }
+    
+    IEnumerator TutorialLevel3()
+    {
+        yield return new WaitForSeconds(5);
+        tutorialTextLevel3.SetActive(false);
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -282,6 +327,7 @@ public class PlayerController : MonoBehaviour
             Instantiate(pickupEffect, transform.position, transform.rotation);
             Destroy(other.gameObject);
             doubleJumpCollected = true;
+            timerJump.SetActive(true);
             StartCoroutine(DoubleJumpTime());
         }
         
@@ -343,12 +389,58 @@ public class PlayerController : MonoBehaviour
         {
             teleport2 = false;
         }
+        
+        if (other.tag == "SceneTrigger3")
+        {
+            tutorialTextLevel3.SetActive(true);
+            StartCoroutine(TutorialLevel3());
+            teleport3 = true;
+            
+        }
+        else
+        {
+            teleport3 = false;
+        }
+        
+        if (other.tag == "SceneTrigger4")
+        {
+            teleport4 = true;
+        }
+        else
+        {
+            teleport4 = false;
+        }
+        
+
+        if (other.CompareTag("Water"))
+        {
+            dead = true;
+        }
+        
+        if (other.CompareTag("WIN"))
+        {
+            winText.SetActive(true);
+        }
+
+        if (other.CompareTag("EnemyWall"))
+        {
+            other.gameObject.SetActive(false);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("EnemyWall"))
+        {
+            other.gameObject.SetActive(true);
+        }
     }
 
     void Restart()
     {
         coinsCollected = 0;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name); 
+        diamondsCollected = 0;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); 
     }
 }
 

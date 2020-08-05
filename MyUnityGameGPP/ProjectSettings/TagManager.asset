@@ -16,6 +16,14 @@ TagManager:
   - SceneTrigger
   - SceneTrigger2
   - Diamond
+  - Water
+  - GM
+  - Platform
+  - SceneTrigger3
+  - SceneTrigger4
+  - WIN
+  - floor
+  - EnemyWall
   layers:
   - Default
   - TransparentFX

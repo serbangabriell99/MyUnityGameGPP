@@ -27,6 +27,11 @@
             </e>
           </e>
         </e>
+        <e p="EnemyScript" t="Include">
+          <e p="Enemy.cs" t="Include" />
+          <e p="SlimeMovement.cs" t="Include" />
+          <e p="SlimeStats.cs" t="Include" />
+        </e>
         <e p="Player&amp;Camera" t="Include">
           <e p="Scripts" t="Include">
             <e p="CameraCollision_1.cs" t="Include" />
@@ -124,12 +129,17 @@
           </e>
         </e>
         <e p="Scripts" t="Include">
+          <e p="CheckPoint.cs" t="Include" />
           <e p="CountdownTimer.cs" t="Include" />
           <e p="DiamondsScore.cs" t="Include" />
+          <e p="GameMaster.cs" t="Include" />
           <e p="MagnetTrigger.cs" t="Include" />
+          <e p="MovingPlatform.cs" t="Include" />
           <e p="OpenDoor2.cs" t="Include" />
           <e p="OpenDoorRight.cs" t="Include" />
           <e p="PathFollower.cs" t="Include" />
+          <e p="platform_trigger_script.cs" t="Include" />
+          <e p="PlayerPos.cs" t="Include" />
           <e p="PowerUpCollect.cs" t="Include" />
           <e p="RotateCoin.cs" t="Include" />
           <e p="Score.cs" t="Include" />
