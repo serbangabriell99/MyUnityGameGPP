@@ -14,6 +14,9 @@ public class PlatformSpline : MonoBehaviour
     public static bool on_station = false;
     public static bool key_pressed = false;
 
+    public static bool onBoat = false;
+    public static bool onBoatNotMoving = false;
+
     public static bool on_station_and_can_move = false;
     // Start is called before the first frame update
     void Start()
@@ -35,6 +38,7 @@ public class PlatformSpline : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.H) && on_station)
         {
             key_pressed = true;
+            onBoat = true;
             thePlayer.transform.position = teleportTarget.transform.position;
         }
 
@@ -42,7 +46,22 @@ public class PlatformSpline : MonoBehaviour
         {
             gameObject.transform.parent = null;
             key_pressed = false;
+            onBoat = false; 
         }
+        
+         if (Input.GetKeyDown(KeyCode.H) && !on_station && onBoat)
+        {
+            gameObject.transform.parent = null;
+            key_pressed = false;
+            onBoat = false;
+        }
+
+         if (Input.GetKeyDown(KeyCode.H)  && !on_station && onBoatNotMoving)
+         {
+             key_pressed = true;
+             onBoat = true;
+             thePlayer.transform.position = teleportTarget.transform.position;  
+         }
 
         if (key_pressed && GetComponent<PlayerController>().enabled )
         {
@@ -53,7 +72,7 @@ public class PlatformSpline : MonoBehaviour
             GetComponent<PlayerController>().enabled = true;  
         }
 
-        if (on_station)
+        if (on_station || (!on_station && onBoatNotMoving) || (!on_station && onBoat))
         {
             text.SetActive(true);
         }
@@ -76,9 +95,24 @@ public class PlatformSpline : MonoBehaviour
              {
                  on_station_and_can_move = false; 
              }
-         }     
-         
+         }
+
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("PathCamera"))
+        {
+           if (GetComponent<PlayerController>().enabled)
+           {
+               onBoatNotMoving = true;
+           }else if (!GetComponent<PlayerController>().enabled)
+           {
+               onBoatNotMoving = false;
+           } 
         }
+        
+    }
 
     private void OnTriggerExit(Collider other)
     {
@@ -86,6 +120,12 @@ public class PlatformSpline : MonoBehaviour
         {
             on_station = false;
         }
+        
+        if(other.CompareTag("PathCamera"))
+        {
+            onBoatNotMoving = false;
+        }
+
     }
     
 }

@@ -13,11 +13,11 @@ public class OpenDoorRight : MonoBehaviour
     private float range;
 
     private bool test = false;
-
-    // Start is called before the first frame update
+    
     void Start()
     {
         anim = gameObject.GetComponent<Animator>();
+        cam.gameObject.SetActive(false);
     }
 
     // Update is called once per frame

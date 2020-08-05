@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 208415582889488405}
   - component: {fileID: 208415582890619605}
   - component: {fileID: 3009292103688201888}
+  - component: {fileID: -6482705097599727595}
   m_Layer: 0
   m_Name: Diamondo5side
   m_TagString: Diamond
@@ -92,3 +93,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotateSpeed: 2
+--- !u!65 &-6482705097599727595
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 208415582892813333}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.4059367, y: 2.4380136, z: 2.4853015}
+  m_Center: {x: -0.0000032729354, y: -0.0000026822754, z: -0.7140472}

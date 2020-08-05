@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     public static int diamondsCollected = 0;
     private float jumpTime = 0.54f;
     private float time1;
+    
     public GameObject pickupEffect;
     public GameObject jumpParticle;
     public GameObject pickupEffectSpeed;
@@ -20,8 +21,12 @@ public class PlayerController : MonoBehaviour
     public bool gameOver = false;
     public GameObject youLose;
     public GameObject timer;
+    public GameObject timerSpeed;
     public GameObject tutorialText;
     public GameObject magnetTutorial;
+    public GameObject coinsCollectedText;
+    public GameObject diamondsCollectedText;
+    public GameObject tutorialTextLevel2;
 
     public float walkSpeed = 4;
     public float runSpeed = 8;
@@ -60,6 +65,7 @@ public class PlayerController : MonoBehaviour
         magnetTutorial.SetActive(false);
         tutorialText.SetActive(true);
         timer.SetActive(false);
+        timerSpeed.SetActive(false);
         youLose.SetActive(false);
         anim = GetComponent<Animator>();
         cameraT = Camera.main.transform;
@@ -68,6 +74,9 @@ public class PlayerController : MonoBehaviour
         superSpeedCollected = false;
         MagnetCollected = false;
         coinsCollected = 0;
+        
+        diamondsCollectedText.SetActive(false);
+        tutorialTextLevel2.SetActive(false);
     }
     
     void Update()
@@ -140,6 +149,7 @@ public class PlayerController : MonoBehaviour
         if (coinsCollected == 2)
         {
             level1win = true;
+            coinsCollectedText.SetActive(false);
         }
         else
         {
@@ -243,6 +253,7 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(30);
         superSpeedCollected = false;
+        timerSpeed.SetActive(false);
     }
     
     IEnumerator MagnetTime()
@@ -256,6 +267,12 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(5);
         magnetTutorial.SetActive(false);
+    }
+
+    IEnumerator TutorialLevel2()
+    {
+        yield return new WaitForSeconds(5);
+        tutorialTextLevel2.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -273,6 +290,7 @@ public class PlayerController : MonoBehaviour
             Instantiate(pickupEffectSpeed, transform.position, transform.rotation);
             Destroy(other.gameObject);
             superSpeedCollected = true;
+            timerSpeed.SetActive(true);
             StartCoroutine(SuperSpeedTime());
         }
         
@@ -290,13 +308,13 @@ public class PlayerController : MonoBehaviour
         if (other.tag == "Coin")
         {
             Destroy(other.gameObject);
-            diamondsCollected++;
+            coinsCollected++;
         }
         
         if (other.tag == "Diamond")
         {
             Destroy(other.gameObject);
-            coinsCollected++;
+            diamondsCollected++;
         }
         
         if (other.tag == "SilverCoin" && !MagnetCollected)
@@ -307,6 +325,9 @@ public class PlayerController : MonoBehaviour
         
         if (other.CompareTag("SceneTrigger"))
         {
+            diamondsCollectedText.SetActive(true);
+            tutorialTextLevel2.SetActive(true);
+            StartCoroutine(TutorialLevel2());
             teleport1 = true;
         }
         else
